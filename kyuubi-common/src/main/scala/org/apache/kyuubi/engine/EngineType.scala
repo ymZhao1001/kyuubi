@@ -23,5 +23,5 @@ package org.apache.kyuubi.engine
 object EngineType extends Enumeration {
   type EngineType = Value
 
-  val SPARK_SQL, FLINK_SQL, TRINO, HIVE_SQL, JDBC = Value
+  val SPARK_SQL, FLINK_SQL, TRINO, HIVE2_SQL, HIVE_SQL, JDBC = Value
 }

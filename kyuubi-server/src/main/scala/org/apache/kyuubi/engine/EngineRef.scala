@@ -29,7 +29,7 @@ import org.apache.kyuubi.{KYUUBI_VERSION, KyuubiSQLException, Logging, Utils}
 import org.apache.kyuubi.config.KyuubiConf
 import org.apache.kyuubi.config.KyuubiConf._
 import org.apache.kyuubi.config.KyuubiReservedKeys.KYUUBI_ENGINE_SUBMIT_TIME_KEY
-import org.apache.kyuubi.engine.EngineType.{EngineType, FLINK_SQL, HIVE_SQL, JDBC, SPARK_SQL, TRINO}
+import org.apache.kyuubi.engine.EngineType.{EngineType, FLINK_SQL, HIVE2_SQL, HIVE_SQL, JDBC, SPARK_SQL, TRINO}
 import org.apache.kyuubi.engine.ShareLevel.{CONNECTION, GROUP, SERVER, ShareLevel}
 import org.apache.kyuubi.engine.flink.FlinkProcessBuilder
 import org.apache.kyuubi.engine.hive.HiveProcessBuilder
@@ -46,8 +46,8 @@ import org.apache.kyuubi.plugin.GroupProvider
 /**
  * The description and functionality of an engine at server side
  *
- * @param conf Engine configuration
- * @param user Caller of the engine
+ * @param conf        Engine configuration
+ * @param user        Caller of the engine
  * @param engineRefId Id of the corresponding session in which the engine is created
  */
 private[kyuubi] class EngineRef(
@@ -133,13 +133,13 @@ private[kyuubi] class EngineRef(
    * The EngineSpace used to expose itself to the KyuubiServers in `serverSpace`
    *
    * For `CONNECTION` share level:
-   *   /`serverSpace_version_CONNECTION_engineType`/`user`/`engineRefId`
+   * /`serverSpace_version_CONNECTION_engineType`/`user`/`engineRefId`
    * For `USER` share level:
-   *   /`serverSpace_version_USER_engineType`/`user`[/`subdomain`]
+   * /`serverSpace_version_USER_engineType`/`user`[/`subdomain`]
    * For `GROUP` share level:
-   *   /`serverSpace_version_GROUP_engineType`/`primary group name`[/`subdomain`]
+   * /`serverSpace_version_GROUP_engineType`/`primary group name`[/`subdomain`]
    * For `SERVER` share level:
-   *   /`serverSpace_version_SERVER_engineType`/`kyuubi server user`[/`subdomain`]
+   * /`serverSpace_version_SERVER_engineType`/`kyuubi server user`[/`subdomain`]
    */
   @VisibleForTesting
   private[kyuubi] lazy val engineSpace: String = {
@@ -188,6 +188,9 @@ private[kyuubi] class EngineRef(
         new FlinkProcessBuilder(appUser, conf, engineRefId, extraEngineLog)
       case TRINO =>
         new TrinoProcessBuilder(appUser, conf, engineRefId, extraEngineLog)
+      case HIVE2_SQL =>
+        conf.setIfMissing(SparkProcessBuilder.APP_KEY, defaultEngineName)
+        new SparkProcessBuilder(appUser, conf, engineRefId, extraEngineLog)
       case HIVE_SQL =>
         new HiveProcessBuilder(appUser, conf, engineRefId, extraEngineLog)
       case JDBC =>
@@ -267,7 +270,7 @@ private[kyuubi] class EngineRef(
    * Get the engine ref from engine space first or create a new one
    *
    * @param discoveryClient the zookeeper client to get or create engine instance
-   * @param extraEngineLog the launch engine operation log, used to inject engine log into it
+   * @param extraEngineLog  the launch engine operation log, used to inject engine log into it
    */
   def getOrCreate(
       discoveryClient: DiscoveryClient,
