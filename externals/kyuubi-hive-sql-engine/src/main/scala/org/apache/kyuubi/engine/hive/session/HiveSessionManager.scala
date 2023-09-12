@@ -20,8 +20,6 @@ package org.apache.kyuubi.engine.hive.session
 import java.io.File
 import java.util.concurrent.Future
 
-import scala.collection.JavaConverters._
-
 import org.apache.hadoop.hive.conf.HiveConf
 import org.apache.hive.service.cli.{SessionHandle => ImportedSessionHandle}
 import org.apache.hive.service.cli.session.{HiveSessionImplwithUGI => ImportedHiveSessionImpl, HiveSessionProxy, SessionManager => ImportedHiveSessionManager}
@@ -81,8 +79,7 @@ class HiveSessionManager(engine: HiveSQLEngine) extends SessionManager("HiveSess
         password,
         HiveSQLEngine.hiveConf,
         ipAddress,
-        null,
-        Seq(ipAddress).asJava)
+        null)
       val proxy = HiveSessionProxy.getProxy(sessionWithUGI, sessionWithUGI.getSessionUgi)
       sessionWithUGI.setProxySession(proxy)
       proxy
