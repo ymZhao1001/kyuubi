@@ -22,7 +22,7 @@ class Mysql8ConnectionProvider extends JdbcConnectionProvider {
 
   override val name: String = classOf[Mysql8ConnectionProvider].getSimpleName
 
-  override val driverClass: String = "com.mysql.cj.jdbc.Driver"
+  override val driverClass: String = "com.mysql.jdbc.Driver"
 
   override def canHandle(providerClass: String): Boolean = {
     driverClass.equalsIgnoreCase(providerClass)
