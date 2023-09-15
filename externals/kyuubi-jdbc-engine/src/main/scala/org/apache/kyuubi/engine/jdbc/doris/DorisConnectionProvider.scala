@@ -16,9 +16,15 @@
  */
 package org.apache.kyuubi.engine.jdbc.doris
 
-import org.apache.kyuubi.engine.jdbc.mysql.Mysql8ConnectionProvider
+import org.apache.kyuubi.engine.jdbc.connection.JdbcConnectionProvider
 
-class DorisConnectionProvider extends Mysql8ConnectionProvider {
+class DorisConnectionProvider extends JdbcConnectionProvider {
 
   override val name: String = classOf[DorisConnectionProvider].getSimpleName
+
+  override val driverClass: String = "com.mysql.cj.jdbc.Driver"
+
+  override def canHandle(providerClass: String): Boolean = {
+    driverClass.equalsIgnoreCase(providerClass)
+  }
 }
