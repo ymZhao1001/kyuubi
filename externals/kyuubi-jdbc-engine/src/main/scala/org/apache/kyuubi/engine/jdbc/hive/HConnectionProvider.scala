@@ -22,7 +22,7 @@ class HiveConnectionProvider extends JdbcConnectionProvider {
 
   override val name: String = classOf[HiveConnectionProvider].getSimpleName
 
-  override val driverClass: String = "org.apache.hadoop.hive.jdbc.HiveDriver"
+  override val driverClass: String = "org.apache.hive.jdbc.HiveDriver"
 
   override def canHandle(providerClass: String): Boolean = {
     driverClass.equalsIgnoreCase(providerClass)
