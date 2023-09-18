@@ -25,23 +25,35 @@ import org.apache.kyuubi.engine.jdbc.schema.SchemaHelper
 class HiveSchemaHelper extends SchemaHelper {
 
   override def toTTypeId(sqlType: Int): TTypeId = sqlType match {
-    case Types.BIT =>
+    case Types.NULL =>
+      TTypeId.NULL_TYPE
+
+    case Types.BIT | Types.BOOLEAN =>
       TTypeId.BOOLEAN_TYPE
 
-    case Types.TINYINT | Types.SMALLINT | Types.INTEGER =>
+    case Types.TINYINT =>
+      TTypeId.TINYINT_TYPE
+
+    case Types.SMALLINT =>
+      TTypeId.SMALLINT_TYPE
+
+    case Types.INTEGER =>
       TTypeId.INT_TYPE
 
     case Types.BIGINT =>
       TTypeId.BIGINT_TYPE
 
-    case Types.REAL =>
-      TTypeId.FLOAT_TYPE
+    case Types.CHAR =>
+      TTypeId.CHAR_TYPE
+
+    case Types.VARCHAR | Types.NVARCHAR | Types.LONGNVARCHAR | Types.LONGVARCHAR =>
+      TTypeId.STRING_TYPE
 
     case Types.DOUBLE =>
       TTypeId.DOUBLE_TYPE
 
-    case Types.CHAR | Types.VARCHAR =>
-      TTypeId.STRING_TYPE
+    case Types.REAL | Types.FLOAT =>
+      TTypeId.FLOAT_TYPE
 
     case Types.DATE =>
       TTypeId.DATE_TYPE
@@ -49,7 +61,7 @@ class HiveSchemaHelper extends SchemaHelper {
     case Types.TIMESTAMP =>
       TTypeId.TIMESTAMP_TYPE
 
-    case Types.DECIMAL =>
+    case Types.DECIMAL | Types.NUMERIC =>
       TTypeId.DECIMAL_TYPE
 
     // TODO add more type support

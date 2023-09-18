@@ -34,11 +34,19 @@ class HiveRowSetHelper extends RowSetHelper {
       sqlType: Int): TColumn = {
     val nulls = new java.util.BitSet()
     sqlType match {
-      case Types.BIT =>
+      case Types.BIT | Types.BOOLEAN =>
         val values = getOrSetAsNull[java.lang.Boolean](rows, ordinal, nulls, true)
         TColumn.boolVal(new TBoolColumn(values, nulls))
 
-      case Types.TINYINT | Types.SMALLINT | Types.INTEGER =>
+      case Types.TINYINT =>
+        val values = getOrSetAsNull[java.lang.Byte](rows, ordinal, nulls, 0.toByte)
+        TColumn.byteVal(new TByteColumn(values, nulls))
+
+      case Types.SMALLINT =>
+        val values = getOrSetAsNull[java.lang.Short](rows, ordinal, nulls, 0.toShort)
+        TColumn.i16Val(new TI16Column(values, nulls))
+
+      case Types.INTEGER =>
         val values = getOrSetAsNull[java.lang.Integer](rows, ordinal, nulls, 0)
         TColumn.i32Val(new TI32Column(values, nulls))
 
@@ -46,7 +54,7 @@ class HiveRowSetHelper extends RowSetHelper {
         val values = getOrSetAsNull[java.lang.Long](rows, ordinal, nulls, 0L)
         TColumn.i64Val(new TI64Column(values, nulls))
 
-      case Types.REAL =>
+      case Types.REAL | Types.FLOAT =>
         val values = getOrSetAsNull[java.lang.Float](rows, ordinal, nulls, 0.toFloat)
           .asScala.map(n => java.lang.Double.valueOf(n.toString)).asJava
         TColumn.doubleVal(new TDoubleColumn(values, nulls))
@@ -81,12 +89,22 @@ class HiveRowSetHelper extends RowSetHelper {
 
   protected def toTColumnValue(ordinal: Int, row: List[Any], types: List[Column]): TColumnValue = {
     types(ordinal).sqlType match {
-      case Types.BIT =>
+      case Types.BIT | Types.BOOLEAN =>
         val boolValue = new TBoolValue
         if (row(ordinal) != null) boolValue.setValue(row(ordinal).asInstanceOf[Boolean])
         TColumnValue.boolVal(boolValue)
 
-      case Types.TINYINT | Types.SMALLINT | Types.INTEGER =>
+      case Types.TINYINT =>
+        val byteValue = new TByteValue()
+        if (row(ordinal) != null) byteValue.setValue(row(ordinal).asInstanceOf[Byte])
+        TColumnValue.byteVal(byteValue)
+
+      case Types.SMALLINT =>
+        val tI16Value = new TI16Value()
+        if (row(ordinal) != null) tI16Value.setValue(row(ordinal).asInstanceOf[Short])
+        TColumnValue.i16Val(tI16Value)
+
+      case Types.INTEGER =>
         val tI32Value = new TI32Value
         if (row(ordinal) != null) tI32Value.setValue(row(ordinal).asInstanceOf[Int])
         TColumnValue.i32Val(tI32Value)
@@ -96,7 +114,7 @@ class HiveRowSetHelper extends RowSetHelper {
         if (row(ordinal) != null) tI64Value.setValue(row(ordinal).asInstanceOf[Long])
         TColumnValue.i64Val(tI64Value)
 
-      case Types.REAL =>
+      case Types.REAL | Types.FLOAT =>
         val tDoubleValue = new TDoubleValue
         if (row(ordinal) != null) {
           val doubleValue = java.lang.Double.valueOf(row(ordinal).asInstanceOf[Float].toString)
