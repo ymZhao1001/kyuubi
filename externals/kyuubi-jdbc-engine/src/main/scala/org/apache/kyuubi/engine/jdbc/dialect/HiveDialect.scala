@@ -21,6 +21,7 @@ import java.util
 
 import org.apache.kyuubi.KyuubiSQLException
 import org.apache.kyuubi.engine.jdbc.hive.{HiveRowSetHelper, HiveSchemaHelper}
+import org.apache.kyuubi.engine.jdbc.operation.ExecuteStatement
 import org.apache.kyuubi.engine.jdbc.schema.{RowSetHelper, SchemaHelper}
 import org.apache.kyuubi.operation.Operation
 import org.apache.kyuubi.session.Session
@@ -42,12 +43,15 @@ class HiveDialect extends JdbcDialect {
     throw KyuubiSQLException.featureNotSupported()
   }
 
-  override def getSchemasOperation(session: Session, catalog: String, schema: String): String = {
+  override def getSchemasOperation(session: Session): Operation = {
     val query = new StringBuilder(
       s"""
-         |SELECT current_database()
-         |""".stripMargin)
-    query.toString()
+         |show tables
+         |""".stripMargin).toString()
+    val executeStatement = {
+      new ExecuteStatement(session, query, false, 0L, false)
+    }
+    executeStatement
   }
 
   override def getTablesQuery(

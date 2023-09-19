@@ -47,7 +47,7 @@ class DorisDialect extends JdbcDialect {
     throw KyuubiSQLException.featureNotSupported()
   }
 
-  override def getSchemasOperation(session: Session, catalog: String, schema: String): String = {
+  override def getSchemasOperation(session: Session): Operation = {
     throw KyuubiSQLException.featureNotSupported()
   }
 

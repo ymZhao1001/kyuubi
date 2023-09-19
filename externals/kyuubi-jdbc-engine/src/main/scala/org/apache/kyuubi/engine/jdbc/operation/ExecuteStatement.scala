@@ -19,6 +19,7 @@ package org.apache.kyuubi.engine.jdbc.operation
 import java.sql.{Connection, Statement, Types}
 
 import org.apache.kyuubi.Logging
+import org.apache.kyuubi.engine.jdbc.dialect.HiveDialect
 import org.apache.kyuubi.engine.jdbc.schema.{Column, Row, Schema}
 import org.apache.kyuubi.engine.jdbc.session.JdbcSessionImpl
 import org.apache.kyuubi.engine.jdbc.util.ResultSetWrapper
@@ -90,9 +91,9 @@ class ExecuteStatement(
     } catch {
       onError(true)
     } finally {
-//      if (jdbcStatement != null) {
-//        jdbcStatement.closeOnCompletion()
-//      }
+      if (jdbcStatement != null && !dialect.isInstanceOf[HiveDialect]) {
+        jdbcStatement.closeOnCompletion()
+      }
       shutdownTimeoutMonitor()
     }
   }
