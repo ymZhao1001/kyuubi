@@ -48,7 +48,7 @@ class PhoenixDialect extends JdbcDialect {
     throw KyuubiSQLException.featureNotSupported()
   }
 
-  override def getSchemasOperation(session: Session): Operation = {
+  override def getSchemasOperation(session: Session, catalog: String, schema: String): String = {
     throw KyuubiSQLException.featureNotSupported()
   }
 

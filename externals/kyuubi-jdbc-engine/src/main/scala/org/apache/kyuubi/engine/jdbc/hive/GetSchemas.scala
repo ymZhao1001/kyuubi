@@ -32,7 +32,7 @@ class GetSchemas(session: Session)
         query.toString,
         false,
         0L,
-        false)
+        true)
       hiveStatement.executeStatement()
     } catch onError()
   }

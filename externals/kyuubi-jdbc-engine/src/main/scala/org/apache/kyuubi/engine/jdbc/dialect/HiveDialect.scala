@@ -42,9 +42,12 @@ class HiveDialect extends JdbcDialect {
     throw KyuubiSQLException.featureNotSupported()
   }
 
-  override def getSchemasOperation(session: Session): Operation = {
-    val op = new GetSchemas(session)
-    op
+  override def getSchemasOperation(session: Session, catalog: String, schema: String): String = {
+    val query = new StringBuilder(
+      s"""
+         |SHOW DATABASES
+         |""".stripMargin)
+    query.toString()
   }
 
   override def getTablesQuery(
