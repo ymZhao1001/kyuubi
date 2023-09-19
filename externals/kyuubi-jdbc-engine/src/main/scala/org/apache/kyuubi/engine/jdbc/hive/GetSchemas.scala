@@ -34,8 +34,6 @@ class GetSchemas(session: Session)
         0L,
         false)
       hiveStatement.executeStatement()
-      schema = hiveStatement.schema
-      iter = hiveStatement.iter
     } catch onError()
   }
 }
