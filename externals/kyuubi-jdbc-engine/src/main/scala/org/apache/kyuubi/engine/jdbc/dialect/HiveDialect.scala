@@ -45,7 +45,7 @@ class HiveDialect extends JdbcDialect {
   override def getSchemasOperation(session: Session, catalog: String, schema: String): String = {
     val query = new StringBuilder(
       s"""
-         |SHOW DATABASES
+         |SHOW DATABASES;
          |""".stripMargin)
     query.toString()
   }
