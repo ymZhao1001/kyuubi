@@ -90,9 +90,9 @@ class ExecuteStatement(
     } catch {
       onError(true)
     } finally {
-//      if (jdbcStatement != null) {
-//        jdbcStatement.closeOnCompletion()
-//      }
+      if (jdbcStatement != null) {
+        jdbcStatement.closeOnCompletion()
+      }
       shutdownTimeoutMonitor()
     }
   }

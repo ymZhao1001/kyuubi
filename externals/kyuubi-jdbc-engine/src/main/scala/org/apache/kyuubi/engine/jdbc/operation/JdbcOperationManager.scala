@@ -70,7 +70,7 @@ class JdbcOperationManager(conf: KyuubiConf) extends OperationManager("JdbcOpera
       schema: String): Operation = {
     val query = dialect.getSchemasOperation(session, catalog, schema)
     val executeStatement =
-      new ExecuteStatement(session, query, false, 0L, true)
+      new ExecuteStatement(session, query, false, 0L, false)
     addOperation(executeStatement)
   }
 
