@@ -35,6 +35,7 @@ class ExecuteStatement(
   extends JdbcOperation(session) with Logging {
 
   private val operationLog: OperationLog = OperationLog.createOperationLog(session, getHandle)
+
   override def getOperationLog: Option[OperationLog] = Option(operationLog)
 
   override protected def runInternal(): Unit = {
@@ -53,7 +54,7 @@ class ExecuteStatement(
     }
   }
 
-  private def executeStatement(): Unit = {
+  def executeStatement(): Unit = {
     setState(OperationState.RUNNING)
     var jdbcStatement: Statement = null
     try {
