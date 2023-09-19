@@ -80,7 +80,7 @@ class JdbcOperationManager(conf: KyuubiConf) extends OperationManager("JdbcOpera
       tableTypes: util.List[String]): Operation = {
     val query = dialect.getTablesQuery(catalogName, schemaName, tableName, tableTypes)
     val executeStatement =
-      new ExecuteStatement(session, query, false, 0L, true)
+      new ExecuteStatement(session, query, false, 0L, false)
     addOperation(executeStatement)
   }
 

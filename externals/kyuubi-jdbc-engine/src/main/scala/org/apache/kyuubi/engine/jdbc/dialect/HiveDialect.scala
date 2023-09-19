@@ -19,6 +19,8 @@ package org.apache.kyuubi.engine.jdbc.dialect
 import java.sql.{Connection, ResultSet, Statement}
 import java.util
 
+import org.apache.commons.lang3.StringUtils
+
 import org.apache.kyuubi.KyuubiSQLException
 import org.apache.kyuubi.engine.jdbc.hive.{HiveRowSetHelper, HiveSchemaHelper}
 import org.apache.kyuubi.engine.jdbc.operation.ExecuteStatement
@@ -46,7 +48,7 @@ class HiveDialect extends JdbcDialect {
   override def getSchemasOperation(session: Session): Operation = {
     val query = new StringBuilder(
       s"""
-         |show tables
+         |SHOW DATABASES
          |""".stripMargin).toString()
     val executeStatement = {
       new ExecuteStatement(session, query, false, 0L, false)
@@ -59,7 +61,18 @@ class HiveDialect extends JdbcDialect {
       schema: String,
       tableName: String,
       tableTypes: util.List[String]): String = {
-    throw KyuubiSQLException.featureNotSupported()
+    val query = new StringBuilder(
+      s"""
+         |SHOW TABLES
+         |""".stripMargin)
+    if (StringUtils.isNotBlank(schema) && !schema.equals("%")) {
+      query.append("IN ").append(schema)
+    }
+
+    if (StringUtils.isNotBlank(tableName)) {
+      query.append("'").append(tableName).append("'")
+    }
+    query.toString()
   }
 
   override def getTableTypesOperation(session: Session): Operation = {
@@ -72,11 +85,29 @@ class HiveDialect extends JdbcDialect {
       schemaName: String,
       tableName: String,
       columnName: String): String = {
-    throw KyuubiSQLException.featureNotSupported()
+    val query = new StringBuilder(
+      s"""
+         |SHOW COLUMNS
+         |""".stripMargin)
+
+    if (StringUtils.isNotBlank(tableName)) {
+      query.append("IN ").append(tableName)
+    }
+    if (StringUtils.isNotBlank(schemaName)) {
+      query.append("IN ").append(schemaName)
+    }
+    query.toString()
   }
 
   override def getFunctionsOperation(session: Session): Operation = {
-    throw KyuubiSQLException.featureNotSupported()
+    val query = new StringBuilder(
+      s"""
+         |SHOW FUNCTIONS
+         |""".stripMargin).toString()
+    val executeStatement = {
+      new ExecuteStatement(session, query, false, 0L, false)
+    }
+    executeStatement
   }
 
   override def getPrimaryKeysOperation(session: Session): Operation = {
@@ -96,6 +127,6 @@ class HiveDialect extends JdbcDialect {
   }
 
   override def name(): String = {
-    "hive2"
+    "hive"
   }
 }
