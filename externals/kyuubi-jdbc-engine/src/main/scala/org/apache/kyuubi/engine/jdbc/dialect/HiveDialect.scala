@@ -20,7 +20,7 @@ import java.sql.{Connection, ResultSet, Statement}
 import java.util
 
 import org.apache.kyuubi.KyuubiSQLException
-import org.apache.kyuubi.engine.jdbc.hive.{GetSchemas, HiveRowSetHelper, HiveSchemaHelper}
+import org.apache.kyuubi.engine.jdbc.hive.{HiveRowSetHelper, HiveSchemaHelper}
 import org.apache.kyuubi.engine.jdbc.schema.{RowSetHelper, SchemaHelper}
 import org.apache.kyuubi.operation.Operation
 import org.apache.kyuubi.session.Session
