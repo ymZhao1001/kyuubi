@@ -33,8 +33,8 @@ trait WithPostgreSqlContainer extends WithJdbcServerContainer {
     dockerImage = postgreSqlDockerImage,
     exposedPorts = Seq(POSTGRESQL_PORT),
     env =
-      (HashMap[String, String](
-        "POSTGRES_PASSWORD" -> "postgres")),
+      HashMap[String, String](
+        "POSTGRES_PASSWORD" -> "postgres"),
     waitStrategy = Wait.forListeningPort)
 
   protected def queryServerUrl: String = {
