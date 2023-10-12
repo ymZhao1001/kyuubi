@@ -90,7 +90,7 @@ class PostgreSqlRowSetHelper extends RowSetHelper {
 
   protected def toTColumnValue(ordinal: Int, row: List[Any], types: List[Column]): TColumnValue = {
     types(ordinal).sqlType match {
-      case Types.BIT =>
+      case Types.BOOLEAN =>
         val boolValue = new TBoolValue
         if (row(ordinal) != null) boolValue.setValue(row(ordinal).asInstanceOf[Boolean])
         TColumnValue.boolVal(boolValue)
@@ -115,7 +115,7 @@ class PostgreSqlRowSetHelper extends RowSetHelper {
         if (row(ordinal) != null) tI64Value.setValue(row(ordinal).asInstanceOf[Long])
         TColumnValue.i64Val(tI64Value)
 
-      case Types.REAL =>
+      case Types.FLOAT =>
         val tDoubleValue = new TDoubleValue
         if (row(ordinal) != null) {
           val doubleValue = java.lang.Double.valueOf(row(ordinal).asInstanceOf[Float].toString)
