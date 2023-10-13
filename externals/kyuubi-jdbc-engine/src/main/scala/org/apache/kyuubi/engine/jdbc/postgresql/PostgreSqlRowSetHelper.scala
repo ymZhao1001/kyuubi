@@ -39,15 +39,7 @@ class PostgreSqlRowSetHelper extends RowSetHelper {
         val values = getOrSetAsNull[java.lang.Boolean](rows, ordinal, nulls, true)
         TColumn.boolVal(new TBoolColumn(values, nulls))
 
-      case Types.TINYINT =>
-        val values = getOrSetAsNull[java.lang.Byte](rows, ordinal, nulls, 0.toByte)
-        TColumn.byteVal(new TByteColumn(values, nulls))
-
-      case Types.SMALLINT =>
-        val values = getOrSetAsNull[java.lang.Short](rows, ordinal, nulls, 0.toShort)
-        TColumn.i16Val(new TI16Column(values, nulls))
-
-      case Types.INTEGER =>
+      case Types.SMALLINT | Types.INTEGER =>
         val values = getOrSetAsNull[java.lang.Integer](rows, ordinal, nulls, 0)
         TColumn.i32Val(new TI32Column(values, nulls))
 
@@ -94,11 +86,6 @@ class PostgreSqlRowSetHelper extends RowSetHelper {
         val boolValue = new TBoolValue
         if (row(ordinal) != null) boolValue.setValue(row(ordinal).asInstanceOf[Boolean])
         TColumnValue.boolVal(boolValue)
-
-      case Types.TINYINT =>
-        val byteValue = new TByteValue()
-        if (row(ordinal) != null) byteValue.setValue(row(ordinal).asInstanceOf[Byte])
-        TColumnValue.byteVal(byteValue)
 
       case Types.SMALLINT =>
         val tI16Value = new TI16Value()
