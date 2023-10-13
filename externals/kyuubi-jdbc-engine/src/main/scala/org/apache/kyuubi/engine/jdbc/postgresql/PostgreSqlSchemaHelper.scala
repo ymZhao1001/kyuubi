@@ -44,8 +44,11 @@ class PostgreSqlSchemaHelper extends SchemaHelper {
     case Types.DOUBLE =>
       TTypeId.DOUBLE_TYPE
 
+    case Types.DECIMAL =>
+      TTypeId.DECIMAL_TYPE
+
     case Types.CHAR | Types.VARCHAR =>
-      TTypeId.VARCHAR_TYPE
+      TTypeId.STRING_TYPE
 
     case Types.DATE =>
       TTypeId.DATE_TYPE

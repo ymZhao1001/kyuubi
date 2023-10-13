@@ -67,11 +67,11 @@ class PostgreSqlDialect extends JdbcDialect {
 
     val filters = ArrayBuffer[String]()
     if (StringUtils.isNotBlank(catalog)) {
-      filters += s"$TABLE_CATALOG = '$catalog'"
+      filters += s"CATALOG_NAME = '$catalog'"
     }
 
     if (StringUtils.isNotBlank(schema)) {
-      filters += s"$TABLE_SCHEMA LIKE '$schema'"
+      filters += s"SCHEMA_NAME LIKE '$schema'"
     }
 
     if (filters.nonEmpty) {
