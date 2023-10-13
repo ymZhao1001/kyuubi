@@ -26,7 +26,7 @@ class SessionSuite extends WithPostgreSqlEngine with HiveJDBCTestHelper {
         "select '1' as id")
       val metadata = resultSet.getMetaData
       for (i <- 1 to metadata.getColumnCount) {
-        assert(metadata.getColumnName(i) == "ID")
+        assert(metadata.getColumnName(i) == "id")
       }
       while (resultSet.next()) {
         val id = resultSet.getObject(1)

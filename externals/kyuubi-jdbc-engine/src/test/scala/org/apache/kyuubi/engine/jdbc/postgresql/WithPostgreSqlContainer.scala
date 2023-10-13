@@ -16,8 +16,6 @@
  */
 package org.apache.kyuubi.engine.jdbc.postgresql
 
-import scala.collection.immutable.HashMap
-
 import com.dimafeng.testcontainers.{GenericContainer, SingleContainer}
 import org.testcontainers.containers.wait.strategy.Wait
 
@@ -32,12 +30,11 @@ trait WithPostgreSqlContainer extends WithJdbcServerContainer {
   override val container: SingleContainer[_] = GenericContainer(
     dockerImage = postgreSqlDockerImage,
     exposedPorts = Seq(POSTGRESQL_PORT),
-    env =
-      HashMap[String, String](
-        "POSTGRES_PASSWORD" -> "postgres"),
+    env = Map[String, String](
+      "POSTGRES_PASSWORD" -> "postgres"),
     waitStrategy = Wait.forListeningPort)
 
-  protected def queryServerUrl: String = {
+  protected def queryUrl: String = {
     val queryServerHost: String = container.host
     val queryServerPort: Int = container.mappedPort(POSTGRESQL_PORT)
     val url = s"$queryServerHost:$queryServerPort"
